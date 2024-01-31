@@ -5,7 +5,6 @@
 #include <iomanip>
 
 using namespace std;
-
 vector<string> splitString(string const& str, char const& separator)
 {
     vector<string> words;
@@ -38,7 +37,7 @@ bool isNumeric(string& number)
     return it == number.end();
 }
 
-double getNumber(string text)
+int getNumber(string text)
 {
     string user_input;
     while (true)
@@ -48,7 +47,29 @@ double getNumber(string text)
             break;
         cout << "Это должно быть число!\n";
     }
-    return stod(user_input);
+    return stoi(user_input);
+}
+
+int getNumberRange(string text, int from, int to)
+{
+    int number;
+    do
+    {
+        cout << "Введите число в диапозоне от " << from << " до " << to << endl;
+        number = getNumber(text);
+    } while (number < from or number > to);
+    return number;
+}
+
+double getDouble(const char* msg)
+{
+    string str_number;
+    cout << msg;
+    cin >> str_number;
+    double number;
+    try { number = stod(str_number);}
+    catch (const out_of_range& e) { getDouble(msg); }
+    return number;
 }
 
 struct MathVector {
@@ -118,10 +139,66 @@ MathVector NormalizeVector(MathVector vector)
     return ScaleVectors(vector, 1 / lenVector(vector));
 }
 
+MathVector createMathVector()
+{
+    string name = getUserString("Введите номер операции : ");
+    double x = getDouble("Введите значение X координаты ветора : ");
+    double y = getDouble("Введите значение X координаты ветора : ");
+    MathVector vector(x, y, name);
+    return vector;
+}
+
+void performOperations()
+{
+    cout << "Введите номер операции над векторами\n";
+    vector<string>actions = {"add", "subtract", "scale", "length", "normalize", "exit"};
+    for (int i = 0; i < actions.size(); ++i)
+    {
+        cout << actions[i] << endl;
+    }
+    string operation;
+    do {
+        operation = getUserString("Введите номер операции : ");
+        if (operation == "add")
+        {
+            cout << "Операция сложение векторов\n";
+            MathVector vectorA = createMathVector();
+            MathVector vectorB = createMathVector();
+            MathVector vectorC = AddVectors(vectorA, vectorB);
+        }
+        if (operation == "substract")
+        {
+            cout << "Операция вычетание векторов\n";
+            MathVector vectorA = createMathVector();
+            MathVector vectorB = createMathVector();
+            MathVector vectorC = SubtractVectors(vectorA, vectorB);
+        }
+        if (operation == "substract")
+        {
+            cout << "Операция скалярное произведение\n";
+            MathVector vector = createMathVector();
+            double scale = getDouble("Введите скалярное значение : ");
+            MathVector vectorC = ScaleVectors(vector, scale);
+        }
+        if (operation == "length")
+        {
+            cout << "Операция длина ветора\n";
+            MathVector vector = createMathVector();
+            cout << "Длина данного вектора = " << lenVector(vector);
+        }
+        if (operation == "normalize")
+        {
+            cout << "Операция нормализация ветора\n";
+            MathVector vector = createMathVector();
+            MathVector normal_vector = NormalizeVector(vector);
+        }
+    } while (operation != "exit");
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Russian");
-    MathVector v(10.6, 5.45,"gffghh");
-    v.getVector();
-
+    setlocale(LC_NUMERIC, "eng");
+    
+    performOperations();
 }
