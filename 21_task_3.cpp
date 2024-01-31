@@ -68,12 +68,15 @@ public:
         points.push_back(x);
         points.push_back(y);
     }
-    void setVector(int x, int y, string nameVector)
+    void setVector(double x, double y, string nameVector)
     {
         points[0] = x;
         points[1] = y;
         name = nameVector;
     }
+    double dataX() { return points[0]; }
+    double dataY() { return points[1]; }
+    string dataName() { return name; }
     void getVector()
     {
         cout << fixed << setprecision(2) << name << " = { " << points[0] << ", " << points[1] << " } ";
@@ -81,6 +84,39 @@ public:
     ~MathVector() { cout << endl << name << " is delete\n"; }
 };
 
+MathVector AddVectors(MathVector vectorA, MathVector vectorB)
+{
+    MathVector newVector;
+    newVector.setVector(vectorA.dataX() + vectorB.dataX(), vectorA.dataY() + vectorB.dataY(), vectorA.dataName() + "+" + vectorB.dataName());
+    newVector.getVector();
+    return newVector;
+}
+
+MathVector SubtractVectors(MathVector vectorA, MathVector vectorB)
+{
+    MathVector newVector;
+    newVector.setVector(vectorA.dataX() - vectorB.dataX(), vectorA.dataY() - vectorB.dataY(), vectorA.dataName() + "-" + vectorB.dataName());
+    newVector.getVector();
+    return newVector;
+}
+
+MathVector ScaleVectors(MathVector vector, double scale)
+{
+    MathVector newVector;
+    newVector.setVector(scale * vector.dataX(), scale * vector.dataY() , to_string (scale) + "*" + vector.dataName());
+    newVector.getVector();
+    return newVector;
+}
+
+double lenVector(MathVector vector)
+{
+    return sqrt(pow(vector.dataX(), 2) + pow(vector.dataY(), 2));
+}
+
+MathVector NormalizeVector(MathVector vector)
+{
+    return ScaleVectors(vector, 1 / lenVector(vector));
+}
 
 int main()
 {
